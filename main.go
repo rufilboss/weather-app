@@ -45,7 +45,7 @@ func query(city string) (weatherData, error) {
 		return weatherData{}, err
 	}
 
-	resp, err := http.Get("http://api.openweathermap.org/data/2.5/weather?APPID=" + apiConfig.OpenWeatherMapApiKey + "&q" + city)
+	resp, err := http.Get("http://api.openweathermap.org/data/2.5/weather?APPID=" + apiConfig.OpenWeatherMapApiKey + "&q=" + city)
 	if err != nil {
 		return weatherData{}, err
 	}
@@ -62,7 +62,7 @@ func query(city string) (weatherData, error) {
 func main() {
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/weather/", func(w http.ResponseWriter, r *http.Request) {
-		city := strings.Split(e.URL.Path, "/", 3)[2]
+		city := strings.SplitN(r.URL.Path, "/", 3)[2]
 		data, err := query(city)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
